@@ -25,14 +25,14 @@ public class UserService {
 			throw new UnExpectedInputException();
 		}
 		
-		if(id.equals("admin")) {
+		if("admin".equals(id)) {
 			System.out.println("\n-------- 관리자입니다. --------");
 		}else {
 			System.out.println("\n-------- 유저입니다. --------");
 		}
 		
 		System.out.println("아이디 : " + id);
-		if(gender.toUpperCase().equals("F")) {
+		if("F".equals(gender.toUpperCase())) {
 			System.out.println("성별 : 여자");
 		}else {
 			System.out.println("성별 : 남자");
