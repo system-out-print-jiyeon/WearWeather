@@ -37,7 +37,7 @@ public class UserService {
 		}else {
 			System.out.println("성별 : 남자");
 		}
-		return user;   
+		return user;
 	}
 
 }
