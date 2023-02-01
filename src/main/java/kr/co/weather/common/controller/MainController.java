@@ -2,6 +2,7 @@ package main.java.kr.co.weather.common.controller;
 
 import org.json.simple.parser.ParseException;
 
+import main.java.kr.co.weather.common.model.Weather;
 import main.java.kr.co.weather.common.service.MainService;
 import main.java.kr.co.weather.user.model.User;
 import main.java.kr.co.weather.user.service.UserService;
@@ -19,7 +20,7 @@ public class MainController {
 		System.out.println("==================================================================");
 
 		// 날씨 api연결
-		mainService.getWeatherInfo();
+		Weather weather = mainService.getWeatherInfo();
 		// 유저 정보 입력, 저장
 		User user = userService.storeUserInfo();
 		

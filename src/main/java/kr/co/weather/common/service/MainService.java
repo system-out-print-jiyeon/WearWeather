@@ -13,15 +13,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import main.java.kr.co.weather.common.model.Weather;
+
 public class MainService {
 	
 	private static final String API_KEY = "98cbd528c3567d033b5add1992086892";
 	
 	// 날씨api를 연결해 입력받은 지역의 현재날씨를 보여줌
-	public void getWeatherInfo() throws ParseException {
+	public Weather getWeatherInfo() throws ParseException {
+		Weather weather = new Weather();
 		Scanner sc = new Scanner(System.in);
 		System.out.print("지역을 입력하세요 : ");
 		String location = sc.next();
+		weather.setLocation(location);
 		
 		try {
 			URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + location + ",KR&APPID=" + API_KEY + "&units=metric");
@@ -50,11 +54,15 @@ public class MainService {
 				JSONObject weatherObj = (JSONObject) ((JSONArray) jsonObj.get("weather")).get(0);
 				JSONObject temperObj = (JSONObject) jsonObj.get("main");
 				
+				weather.setCondition(weatherObj.get("description").toString());
+				weather.setTemperature(temperObj.get("temp").toString());
+				weather.setFeelsLike(temperObj.get("feels_like").toString());
 				
 				
 				System.out.println("지역 : " + jsonObj.get("name"));
 				System.out.println("날씨 : " + weatherObj.get("description"));
-				System.out.println("기온 : " + temperObj.get("temp_min"));
+				System.out.println("현재 온도 : " + temperObj.get("temp"));
+				System.out.println("체감 온도 : " + temperObj.get("feels_like"));
 			}
 
 			conn.disconnect();
@@ -64,6 +72,8 @@ public class MainService {
 		  } catch (IOException e) {
 			e.printStackTrace();
 		  }
+		
+		return weather;
 	}
 
 }
