@@ -18,8 +18,10 @@ public class UserService {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("\n아이디를 입력하세요 : ");
 		String id = sc.next();
+		user.setUserId(id);
 		System.out.print("성별을 입력하세요 (M/F) : ");
 		String gender = sc.next();
+		user.setUserGender(gender);
 		
 		if(!genderList.contains(gender.toUpperCase())) {
 			throw new UnExpectedInputException();
