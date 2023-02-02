@@ -10,6 +10,8 @@ public class User {
 	/** 사용자 성별. */
 	private String userGender;
 
+	/** 관리자 여부 */
+	private String adminYn;
 
 	public String getUserId() {
 		return userId;
@@ -29,5 +31,12 @@ public class User {
 		this.userGender = userGender;
 	}
 
+	public String getAdminYn() {
+		return adminYn;
+	}
+
+	public void setAdminYn(String adminYn) {
+		this.adminYn = adminYn;
+	}
 	
 }
