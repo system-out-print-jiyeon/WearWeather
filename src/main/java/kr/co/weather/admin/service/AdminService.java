@@ -62,17 +62,28 @@ public class AdminService {
 	
 	private void insertUser() throws IOException {
 		System.out.println("=======> 사용자  등록");
-		File userFile = new File("C:\\storage\\User.txt"); 
+		String defaultPath = "C:\\storage"; 		// 기본 폴더 경로
+		String userPath = defaultPath + "\\users";  // 유저 개인 폴더 경로
+		File defaultFolder = new File(defaultPath);
+		File userFolder = new File(userPath);
+		if (!defaultFolder.exists()) {
+			defaultFolder.mkdir(); //폴더 생성      
+         } 
+		if (!userFolder.exists()) {
+ 			userFolder.mkdir(); //폴더 생성       
+		 }
+		
+		File userIdFile = new File("C:\\storage\\UserId.txt"); 
 		List<String> currentUser = new ArrayList<>();
 		
-		userFile.createNewFile();
+		userIdFile.createNewFile();
 		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("등록하실 사용자 아이디를 입력하세요.");
 		String userName = sc.next();
 		
 		// 현재 등록된 사용자 읽어오기
-        FileReader filereader = new FileReader(userFile);
+        FileReader filereader = new FileReader(userIdFile);
         BufferedReader bufReader = new BufferedReader(filereader);
         String line = "";
         while((line = bufReader.readLine()) != null){
@@ -81,11 +92,16 @@ public class AdminService {
         //.readLine()은 끝에 개행문자를 읽지 않는다.            
         bufReader.close();
 
-        // 등록된 사용자 아닐경우에만 등록
+        // 등록된 사용자 아닐경우에만 UserId파일에 등록
         // append=true 기존값에 이어쓰기
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userFile, true));
+		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userIdFile, true));
 		if(!currentUser.contains(userName)) {
-			if(userFile.isFile() && userFile.canWrite()){
+
+			// 유저 개인 정보 저장 파일
+			File userFile = new File("C:\\storage\\users\\" + userName + ".txt"); 
+			userFile.createNewFile();
+			
+			if(userIdFile.isFile() && userIdFile.canWrite()){
 	            bufferedWriter.write(userName);
 	            bufferedWriter.newLine();
 	            bufferedWriter.close();
