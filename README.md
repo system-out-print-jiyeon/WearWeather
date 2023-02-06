@@ -1,2 +1,2 @@
 # WearWeather
-## only use java (console)
+only use java (console)
