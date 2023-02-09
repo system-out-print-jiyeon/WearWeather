@@ -7,6 +7,9 @@ public class User {
 	/** 사용자 아이디. */
 	private String userId;
 	
+	/** 사용자 아이디. */
+	private String userName;
+	
 	/** 사용자 설정지역 */
 	private String userLocation;
 
@@ -22,6 +25,14 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getUserLocation() {
