@@ -14,21 +14,19 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import main.java.kr.co.weather.common.model.Weather;
+import main.java.kr.co.weather.user.model.User;
 
 public class MainService {
 	
 	private static final String API_KEY = "98cbd528c3567d033b5add1992086892";
 	
 	// 날씨api를 연결해 입력받은 지역의 현재날씨를 보여줌
-	public Weather getWeatherInfo() throws ParseException {
+	public Weather getWeatherInfo(User user) throws ParseException {
 		Weather weather = new Weather();
 		Scanner sc = new Scanner(System.in);
-		System.out.print("지역을 입력하세요 : ");
-		String location = sc.next();
-		weather.setLocation(location);
 		
 		try {
-			URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + location + ",KR&APPID=" + API_KEY + "&units=metric");
+			URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + user.getUserLocation() + ",KR&APPID=" + API_KEY + "&units=metric");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept", "application/json");
@@ -38,11 +36,10 @@ public class MainService {
 						+ conn.getResponseCode());
 			}else if(conn.getResponseCode() == 404) { // TODO : exception 처리하기
 				System.out.println("올바른 지역을 다시 입력해주세요");
-				this.getWeatherInfo();
+				this.getWeatherInfo(user);
 			}
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-				(conn.getInputStream())));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String output;
 			System.out.println("\n[현재 날씨]");

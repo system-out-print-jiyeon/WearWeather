@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
 import main.java.kr.co.weather.admin.service.AdminService;
-import main.java.kr.co.weather.common.model.Weather;
 import main.java.kr.co.weather.common.service.MainService;
 import main.java.kr.co.weather.user.model.User;
 import main.java.kr.co.weather.user.service.UserService;

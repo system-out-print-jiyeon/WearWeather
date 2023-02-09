@@ -7,13 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
@@ -54,7 +55,7 @@ public class UserService {
 			if(userList.contains(id)) {
 				System.out.println("\n-------- 유저입니다. --------");
 				user.setAdminYn("N");
-				this.goToUserMenu(user);
+				this.goToUserMenu(user.getUserId());
 			}else {
 				System.out.println("\n-------- 등록된 유저가 아닙니다. 관리자에게 등록요청하세요. --------");
 			}			
@@ -62,7 +63,10 @@ public class UserService {
 		return user;
 	}
 	
-	public void goToUserMenu(User user) throws IOException, ParseException {
+	public void goToUserMenu(String userId) throws IOException, ParseException {
+		// 유저정보 가져와서 set
+		User user = this.getUser(userId);
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("==========================");
 		System.out.println("메뉴를 선택하세요. \n");
@@ -76,14 +80,14 @@ public class UserService {
 				this.getTodayOutfit();
 				break;
 			case 2 : 
-				mainService.getWeatherInfo();
+				mainService.getWeatherInfo(user);
 				break;
 			case 3 : 
-				this.goToMyPage(user);
+				this.goToMyPage(userId);
 				break;
 			default : 
 				System.out.println("💥💥💥올바른 메뉴를 입력해주세요! \n\n");
-				this.goToUserMenu(user);
+				this.goToUserMenu(userId);
 				
 		}
 	}
@@ -92,7 +96,7 @@ public class UserService {
 		System.out.println("=======> 옷차림 추천받기");
 	}
 	
-	public void goToMyPage(User user) throws IOException {
+	public void goToMyPage(String userId) throws IOException {
 		System.out.println("=======> 마이페이지");
 		Scanner sc = new Scanner(System.in);
 		System.out.println("==========================");
@@ -101,39 +105,25 @@ public class UserService {
 		int menu = sc.nextInt();
 		switch(menu) {
 			case 1 : 
-				this.getMyInfo(user);
+				this.getMyInfo(userId);
 				break;
 			case 2 : 
-				this.updateMyInfo(user);
+				this.updateMyInfo(userId);
 				break;
 			default : 
 				System.out.println("💥💥💥올바른 메뉴를 입력해주세요! \n\n");
-				this.goToMyPage(user);
-				
+				this.goToMyPage(userId);
 		}
-		
-		
 	}
 	
-	private void getMyInfo(User user) {
+	private void getMyInfo(String userId) {
 		System.out.println("=======> 내 정보 조회");
-		try {
-			File userFile = new File("C:\\storage\\users\\" + user.getUserId() + ".txt"); 
-			FileReader filereader = new FileReader(userFile);
-	        BufferedReader bufReader = new BufferedReader(filereader);
-	        String line = "";
-	        while((line = bufReader.readLine()) != null){
-	            System.out.println(line);
-	        }
-	        bufReader.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		getUser(userId);
 	}
 	
-	private void updateMyInfo(User user) throws IOException {
+	private void updateMyInfo(String userId) throws IOException {
 		System.out.println("=======> 내 정보 수정");
-		String fileName = "C:\\storage\\users\\" + user.getUserId() + ".txt";
+		String fileName = "C:\\storage\\users\\" + userId + ".txt";
 		List<String> genderList = new ArrayList<>();
 		genderList.add("F");
 		genderList.add("M");
@@ -158,18 +148,43 @@ public class UserService {
 			throw new UnExpectedInputException();
 		}
 		
-        File userFile = new File("C:\\storage\\users\\" + user.getUserId() + ".txt"); 
+        File userFile = new File("C:\\storage\\users\\" + userId + ".txt"); 
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userFile, true));
         if(userFile.isFile() && userFile.canWrite()){
             bufferedWriter.write(
-            		"{\"userId\":\"" + user.getUserId()
+            		"{\"userId\":\"" + userId
             		+ "\",\"userName\":\"" + name
             		+ "\",\"userLocation\":\"" + location
             		+ "\",\"userGender\":\"" + gender 
             		+ "\"}");
             bufferedWriter.close();
-            System.out.println("[" + user.getUserId() + "] 사용자 정보 수정완료.");
+            System.out.println("[" + userId + "] 사용자 정보 수정완료.");
         }
+	}
+	
+	private User getUser(String userId) {
+		User user = new User();
+		// 유저정보 가져와서 set
+		try {
+			File userFile = new File("C:\\storage\\users\\" + userId + ".txt"); 
+			FileReader filereader = new FileReader(userFile);
+	        BufferedReader bufReader = new BufferedReader(filereader);
+	        String line = "";
+	        while((line = bufReader.readLine()) != null){
+	        	JSONParser parser = new JSONParser();
+				Object obj = parser.parse(line);
+				JSONObject jsonObj = (JSONObject) obj;
+				user.setUserId(userId);
+				user.setUserName((String) jsonObj.get("userName"));
+				user.setUserLocation((String) jsonObj.get("userLocation"));
+				user.setUserGender((String) jsonObj.get("userGender"));
+		        System.out.println(line);
+	        }
+	        bufReader.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return user;
 	}
 
 }
