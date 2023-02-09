@@ -28,9 +28,6 @@ public class MainController {
 		
 		if("Y".equalsIgnoreCase(user.getAdminYn())) {
 			adminService.goToAdminMenu();
-		}else {
-			// 날씨 api연결
-			Weather weather = mainService.getWeatherInfo();
 		}
 		
 		
