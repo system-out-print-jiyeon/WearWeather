@@ -23,13 +23,14 @@ public class MainController {
 		System.out.println("===================== ⛅ Wear Weather ⛅  =========================");
 		System.out.println("==================================================================");
 
-		// 날씨 api연결
-		Weather weather = mainService.getWeatherInfo();
-		// 유저 정보 입력, 저장
-		User user = userService.storeUserInfo();
+		// 유저 로그인 (관리자가 등록한 유저 여부 판단)
+		User user = userService.userLogin();
 		
 		if("Y".equalsIgnoreCase(user.getAdminYn())) {
 			adminService.goToAdminMenu();
+		}else {
+			// 날씨 api연결
+			Weather weather = mainService.getWeatherInfo();
 		}
 		
 		

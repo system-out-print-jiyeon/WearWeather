@@ -45,7 +45,7 @@ public class AdminService {
 	private void selectUser() throws IOException {
 		System.out.println("=======> 사용자  조회");
 		try {
-			File userFile = new File("C:\\storage\\User.txt"); 
+			File userFile = new File("C:\\storage\\UserId.txt"); 
 			// 현재 등록된 사용자 읽어오기
 	        FileReader filereader = new FileReader(userFile);
 	        BufferedReader bufReader = new BufferedReader(filereader);

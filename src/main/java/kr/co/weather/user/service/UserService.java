@@ -1,21 +1,19 @@
 package main.java.kr.co.weather.user.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
 import main.java.kr.co.weather.user.model.User;
 
 public class UserService {
 	
-	public User storeUserInfo() {
+	public User userLogin() {
 		User user = new User();
-		String gender = "";
-		List<String> genderList = new ArrayList<>();
-		genderList.add("F");
-		genderList.add("M");
-		
+		List<String> userList = new ArrayList<>();
 		Scanner sc = new Scanner(System.in);
 		System.out.print("\n아이디를 입력하세요 : ");
 		String id = sc.next();
@@ -25,25 +23,31 @@ public class UserService {
 			System.out.println("\n-------- 관리자입니다. --------");
 			user.setAdminYn("Y");
 		}else {
-			System.out.println("\n-------- 유저입니다. --------");
-			user.setAdminYn("N");
-			System.out.print("성별을 입력하세요 (M/F) : ");
-			gender = sc.next();
-			user.setUserGender(gender);
 			
-			if(!genderList.contains(gender.toUpperCase())) {
-				throw new UnExpectedInputException();
+			try {
+				File userFile = new File("C:\\storage\\UserId.txt"); 
+				// 현재 등록된 사용자 읽어오기
+		        FileReader filereader = new FileReader(userFile);
+		        BufferedReader bufReader = new BufferedReader(filereader);
+		        String line = "";
+		        while((line = bufReader.readLine()) != null){
+		        	userList.add(line);
+		        }
+		        bufReader.close();
+			} catch (Exception e) {
+				System.out.println(e);
 			}
-
-			System.out.println("아이디 : " + id);
-			if("F".equals(gender.toUpperCase())) {
-				System.out.println("성별 : 여자");
+			
+			if(userList.contains(id)) {
+				System.out.println("\n-------- 유저입니다. --------");
+				user.setAdminYn("N");
 			}else {
-				System.out.println("성별 : 남자");
-			}
+				System.out.println("\n-------- 등록된 유저가 아닙니다. 관리자에게 등록요청하세요. --------");
+			}			
 		}
-		
 		return user;
 	}
+	
+	
 
 }
