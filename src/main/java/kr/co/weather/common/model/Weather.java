@@ -9,13 +9,13 @@ public class Weather {
 	// 기상 상태
 	private String condition;
 	// 현재 온도
-	private String temperature;
+	private double temperature;
 	// 체감 온도
-	private String feelsLike;
+	private double feelsLike;
 	// 최저 기온
-	private String minTemperature;
+	private double minTemperature;
 	// 최고 기온
-	private String maxTemperature;
+	private double maxTemperature;
 	
 	public String getLocation() {
 		return location;
@@ -29,29 +29,30 @@ public class Weather {
 	public void setCondition(String condition) {
 		this.condition = condition;
 	}
-	public String getTemperature() {
+	public double getTemperature() {
 		return temperature;
 	}
-	public void setTemperature(String temperature) {
+	public void setTemperature(double temperature) {
 		this.temperature = temperature;
 	}
-	public String getFeelsLike() {
+	public double getFeelsLike() {
 		return feelsLike;
 	}
-	public void setFeelsLike(String feelsLike) {
+	public void setFeelsLike(double feelsLike) {
 		this.feelsLike = feelsLike;
 	}
-	public String getMinTemperature() {
+	public double getMinTemperature() {
 		return minTemperature;
 	}
-	public void setMinTemperature(String minTemperature) {
+	public void setMinTemperature(double minTemperature) {
 		this.minTemperature = minTemperature;
 	}
-	public String getMaxTemperature() {
+	public double getMaxTemperature() {
 		return maxTemperature;
 	}
-	public void setMaxTemperature(String maxTemperature) {
+	public void setMaxTemperature(double maxTemperature) {
 		this.maxTemperature = maxTemperature;
 	}
+	
 	
 }

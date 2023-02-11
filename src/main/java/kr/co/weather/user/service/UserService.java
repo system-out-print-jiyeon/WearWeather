@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
+import main.java.kr.co.weather.common.model.Weather;
 import main.java.kr.co.weather.common.service.MainService;
 import main.java.kr.co.weather.user.model.User;
 
@@ -77,10 +78,10 @@ public class UserService {
 		
 		switch(menu) {
 			case 1 : 
-				this.getTodayOutfit();
+				this.getTodayOutfit(user);
 				break;
 			case 2 : 
-				mainService.getWeatherInfo(user);
+				mainService.printWeather(user);
 				break;
 			case 3 : 
 				this.goToMyPage(userId);
@@ -92,8 +93,17 @@ public class UserService {
 		}
 	}
 	
-	public void getTodayOutfit() {
+	public void getTodayOutfit(User user) throws ParseException {
 		System.out.println("=======> 옷차림 추천받기");
+		Weather weather = mainService.getWeatherInfo(user);
+		
+		System.out.println("[ 현재 " + weather.getLocation() + "의 체감온도 : " + weather.getFeelsLike() + " ]");
+		
+		if(weather.getFeelsLike() < 0) {
+			System.out.println("패딩, 야상, 목도리");
+		}else {
+			System.out.println("코트, 가죽자켓, 트렌치코트");
+		}
 	}
 	
 	public void goToMyPage(String userId) throws IOException {
