@@ -16,19 +16,15 @@ public class AdminService {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("==========================");
 		System.out.println("관리자 메뉴를 선택하세요. \n");
-		System.out.println("1. 옷차림 데이터 관리");
-		System.out.println("2. 사용자 조회");
-		System.out.println("3. 사용자 등록");
+		System.out.println("1. 사용자 조회");
+		System.out.println("2. 사용자 등록");
 		int menu = sc.nextInt();
 		
 		switch(menu) {
 			case 1 : 
-				this.managementClothesData();
-				break;
-			case 2 : 
 				this.selectUser();
 				break;
-			case 3 : 
+			case 2 : 
 				this.insertUser();
 				break;
 			default : 
@@ -36,10 +32,6 @@ public class AdminService {
 				this.goToAdminMenu();
 				
 		}
-	}
-	
-	private void managementClothesData() {
-		System.out.println("=======> 옷차림 데이터 관리");
 	}
 	
 	private void selectUser() throws IOException {

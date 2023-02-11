@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import main.java.kr.co.weather.common.Enum.Clothes;
 import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
 import main.java.kr.co.weather.common.model.Weather;
 import main.java.kr.co.weather.common.service.MainService;
@@ -96,14 +97,10 @@ public class UserService {
 	public void getTodayOutfit(User user) throws ParseException {
 		System.out.println("=======> 옷차림 추천받기");
 		Weather weather = mainService.getWeatherInfo(user);
+		String clothesRecommend =  Clothes.getTemperature(weather.getFeelsLike());
 		
 		System.out.println("[ 현재 " + weather.getLocation() + "의 체감온도 : " + weather.getFeelsLike() + " ]");
-		
-		if(weather.getFeelsLike() < 0) {
-			System.out.println("패딩, 야상, 목도리");
-		}else {
-			System.out.println("코트, 가죽자켓, 트렌치코트");
-		}
+		System.out.println(clothesRecommend);
 	}
 	
 	public void goToMyPage(String userId) throws IOException {
