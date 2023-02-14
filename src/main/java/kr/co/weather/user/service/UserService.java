@@ -181,7 +181,7 @@ public class UserService {
 			FileReader filereader = new FileReader(userFile);
 	        BufferedReader bufReader = new BufferedReader(filereader);
 	        String line = "";
-	        while((line = bufReader.readLine()) != null){
+	        if((line = bufReader.readLine()) != null){
 	        	JSONParser parser = new JSONParser();
 				Object obj = parser.parse(line);
 				JSONObject jsonObj = (JSONObject) obj;
@@ -190,6 +190,8 @@ public class UserService {
 				user.setUserLocation((String) jsonObj.get("userLocation"));
 				user.setUserGender((String) jsonObj.get("userGender"));
 		        System.out.println(line);
+	        }else {
+	        	System.out.println("등록된 정보가 없습니다. [내 정보 수정]에서 정보를 입력해주세요.");
 	        }
 	        bufReader.close();
 		} catch (Exception e) {
