@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class AdminService {
 
-	public void goToAdminMenu() throws IOException {
+	public void goToAdminMenu() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("==========================");
 		System.out.println("관리자 메뉴를 선택하세요. \n");
@@ -34,7 +34,7 @@ public class AdminService {
 		}
 	}
 	
-	private void selectUser() throws IOException {
+	private void selectUser() {
 		System.out.println("=======> 사용자  조회");
 		try {
 			File userFile = new File("C:\\storage\\UserId.txt"); 
@@ -52,7 +52,7 @@ public class AdminService {
 
 	}
 	
-	private void insertUser() throws IOException {
+	private void insertUser() {
 		System.out.println("=======> 사용자  등록");
 		String defaultPath = "C:\\storage"; 		// 기본 폴더 경로
 		String userPath = defaultPath + "\\users";  // 유저 개인 폴더 경로
@@ -68,44 +68,46 @@ public class AdminService {
 		File userIdFile = new File("C:\\storage\\UserId.txt"); 
 		List<String> currentUser = new ArrayList<>();
 		
-		userIdFile.createNewFile();
-		
-		Scanner sc = new Scanner(System.in);
-		System.out.println("등록하실 사용자 아이디를 입력하세요.");
-		String userName = sc.next();
-		
-		// 현재 등록된 사용자 읽어오기
-        FileReader filereader = new FileReader(userIdFile);
-        BufferedReader bufReader = new BufferedReader(filereader);
-        String line = "";
-        while((line = bufReader.readLine()) != null){
-            currentUser.add(line);
-        }
-        //.readLine()은 끝에 개행문자를 읽지 않는다.            
-        bufReader.close();
-
-        // 등록된 사용자 아닐경우에만 UserId파일에 등록
-        // append=true 기존값에 이어쓰기
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userIdFile, true));
-		if(!currentUser.contains(userName)) {
-
-			// 유저 개인 정보 저장 파일
-			File userFile = new File("C:\\storage\\users\\" + userName + ".txt"); 
-			userFile.createNewFile();
+		try {
+			userIdFile.createNewFile();
+			Scanner sc = new Scanner(System.in);
+			System.out.println("등록하실 사용자 아이디를 입력하세요.");
+			String userName = sc.next();
 			
-			if(userIdFile.isFile() && userIdFile.canWrite()){
-	            bufferedWriter.write(userName);
-	            bufferedWriter.newLine();
-	            bufferedWriter.close();
-	            System.out.println("[" + userName + "] 사용자 등록완료.");
+			// 현재 등록된 사용자 읽어오기
+	        FileReader filereader = new FileReader(userIdFile);
+	        BufferedReader bufReader = new BufferedReader(filereader);
+	        String line = "";
+	        while((line = bufReader.readLine()) != null){
+	            currentUser.add(line);
 	        }
-		}else {
-			System.out.println("이미 등록된 사용자입니다.");
-			this.insertUser();
-		}
-		
+	        //.readLine()은 끝에 개행문자를 읽지 않는다.            
+	        bufReader.close();
 
-		
+	        // 등록된 사용자 아닐경우에만 UserId파일에 등록
+	        // append=true 기존값에 이어쓰기
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userIdFile, true));
+			if(!currentUser.contains(userName)) {
+
+				// 유저 개인 정보 저장 파일
+				File userFile = new File("C:\\storage\\users\\" + userName + ".txt"); 
+				userFile.createNewFile();
+				
+				if(userIdFile.isFile() && userIdFile.canWrite()){
+		            bufferedWriter.write(userName);
+		            bufferedWriter.newLine();
+		            bufferedWriter.close();
+		            System.out.println("[" + userName + "] 사용자 등록완료.");
+		        }
+			}else {
+				System.out.println("이미 등록된 사용자입니다.");
+				this.insertUser();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

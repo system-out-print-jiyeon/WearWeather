@@ -15,7 +15,6 @@ import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import main.java.kr.co.weather.common.Enum.Clothes;
 import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
@@ -27,7 +26,7 @@ public class UserService {
 	
 	MainService mainService = new MainService();
 	
-	public User userLogin() throws IOException, ParseException {
+	public User userLogin() {
 		User user = new User();
 		List<String> userList = new ArrayList<>();
 		Scanner sc = new Scanner(System.in);
@@ -65,7 +64,7 @@ public class UserService {
 		return user;
 	}
 	
-	public void goToUserMenu(String userId) throws IOException, ParseException {
+	public void goToUserMenu(String userId) {
 		// 유저정보 가져와서 set
 		User user = this.getUser(userId);
 		
@@ -94,7 +93,7 @@ public class UserService {
 		}
 	}
 	
-	public void getTodayOutfit(User user) throws ParseException {
+	public void getTodayOutfit(User user) {
 		System.out.println("=======> 옷차림 추천받기");
 		Weather weather = mainService.getWeatherInfo(user);
 		String clothesRecommend =  Clothes.getTemperature(weather.getFeelsLike());
@@ -103,7 +102,7 @@ public class UserService {
 		System.out.println(clothesRecommend);
 	}
 	
-	public void goToMyPage(String userId) throws IOException {
+	public void goToMyPage(String userId) {
 		System.out.println("=======> 마이페이지");
 		Scanner sc = new Scanner(System.in);
 		System.out.println("==========================");
@@ -128,7 +127,7 @@ public class UserService {
 		getUser(userId);
 	}
 	
-	private void updateMyInfo(String userId) throws IOException {
+	private void updateMyInfo(String userId) {
 		System.out.println("=======> 내 정보 수정");
 		String fileName = "C:\\storage\\users\\" + userId + ".txt";
 		List<String> genderList = new ArrayList<>();
@@ -156,17 +155,22 @@ public class UserService {
 		}
 		
         File userFile = new File("C:\\storage\\users\\" + userId + ".txt"); 
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userFile, true));
-        if(userFile.isFile() && userFile.canWrite()){
-            bufferedWriter.write(
-            		"{\"userId\":\"" + userId
-            		+ "\",\"userName\":\"" + name
-            		+ "\",\"userLocation\":\"" + location
-            		+ "\",\"userGender\":\"" + gender 
-            		+ "\"}");
-            bufferedWriter.close();
-            System.out.println("[" + userId + "] 사용자 정보 수정완료.");
-        }
+		BufferedWriter bufferedWriter;
+		try {
+			bufferedWriter = new BufferedWriter(new FileWriter(userFile, true));
+	        if(userFile.isFile() && userFile.canWrite()){
+	            bufferedWriter.write(
+	            		"{\"userId\":\"" + userId
+	            		+ "\",\"userName\":\"" + name
+	            		+ "\",\"userLocation\":\"" + location
+	            		+ "\",\"userGender\":\"" + gender 
+	            		+ "\"}");
+	            bufferedWriter.close();
+	            System.out.println("[" + userId + "] 사용자 정보 수정완료.");
+	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private User getUser(String userId) {

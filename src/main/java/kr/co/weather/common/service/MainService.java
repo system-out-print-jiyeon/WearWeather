@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import main.java.kr.co.weather.common.Exception.UnExpectedInputException;
+import main.java.kr.co.weather.common.Exception.UnExpectedInputException.ERROR;
 import main.java.kr.co.weather.common.model.Weather;
 import main.java.kr.co.weather.user.model.User;
 
@@ -21,7 +23,7 @@ public class MainService {
 	private static final String API_KEY = "98cbd528c3567d033b5add1992086892";
 	
 	// 날씨api를 연결해 입력받은 지역의 현재날씨를 보여줌
-	public Weather getWeatherInfo(User user) throws ParseException {
+	public Weather getWeatherInfo(User user) {
 		Weather weather = new Weather();
 		Scanner sc = new Scanner(System.in);
 		
@@ -35,8 +37,7 @@ public class MainService {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}else if(conn.getResponseCode() == 404) { // TODO : exception 처리하기
-				System.out.println("올바른 지역을 다시 설정해주세요");
-				this.getWeatherInfo(user);
+				throw new UnExpectedInputException(ERROR.NOT_FOUND_LOCATION);
 			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -45,15 +46,21 @@ public class MainService {
 			while ((output = br.readLine()) != null) {
 				
 				JSONParser parser = new JSONParser();
-				Object obj = parser.parse(output);
-				JSONObject jsonObj = (JSONObject) obj;
-				JSONObject weatherObj = (JSONObject) ((JSONArray) jsonObj.get("weather")).get(0);
-				JSONObject temperObj = (JSONObject) jsonObj.get("main");
-				
-				weather.setLocation(user.getUserLocation());
-				weather.setCondition(weatherObj.get("description").toString());
-				weather.setTemperature((double) temperObj.get("temp"));
-				weather.setFeelsLike((double)temperObj.get("feels_like"));
+				Object obj;
+				try {
+					obj = parser.parse(output);
+					JSONObject jsonObj = (JSONObject) obj;
+					JSONObject weatherObj = (JSONObject) ((JSONArray) jsonObj.get("weather")).get(0);
+					JSONObject temperObj = (JSONObject) jsonObj.get("main");
+					
+					weather.setLocation(user.getUserLocation());
+					weather.setCondition(weatherObj.get("description").toString());
+					weather.setTemperature((double) temperObj.get("temp"));
+					weather.setFeelsLike((double)temperObj.get("feels_like"));
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 
 			conn.disconnect();
@@ -67,7 +74,7 @@ public class MainService {
 		return weather;
 	}
 	
-	public void printWeather(User user) throws ParseException {
+	public void printWeather(User user) {
 		Weather weather =  this.getWeatherInfo(user);
 
 		System.out.println("\n[현재 날씨]");
